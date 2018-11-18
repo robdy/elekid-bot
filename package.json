@@ -1,0 +1,14 @@
+{
+  "name": "elekid",
+  "version": "0.0.1",
+  "description": "Bot with multiple functionalities: high five, showing current time in different timezones",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "robdy",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
