@@ -11,7 +11,7 @@ client.on('ready', () => {
 client.on('message', msg => {
   if (/[oO0]\/(?!\\[oO0])/.exec(msg.content)) {
     let sender = msg.author;
-    const collector = new Discord.MessageCollector(msg.channel, m => m.author.id === sender.id, { time: 10000 });
+    const collector = new Discord.MessageCollector(msg.channel, m => m.author.id !== sender.id, { time: 10000 });
     collector.on('collect', msg => {
       let receiver = msg.author;
       if (/(?<![oO0]\/)\\[oO0]/.exec(msg.content)) {
