@@ -3,7 +3,7 @@ const client  = new Discord.Client();
 const config  = require('./config.js');
 
 client.on('ready', () => {
-  client.user.setPresence({ status: 'online', game: { name: '@Elekid bot on Azure'} });
+  client.user.setPresence({ status: 'online', game: { name: '@Elekid bot'} });
   console.log("I'm in");
   console.log(client.user.username);
 });
