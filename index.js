@@ -3,7 +3,7 @@ const client  = new Discord.Client();
 const config  = require('./config.js');
 
 client.on('ready', () => {
-  const game = '@Elekid bot' + (config.isDev ? ' - dev v' +  : '');
+  const game = '@Elekid bot' + (config.isDev ? ' - dev' : '');
   client.user.setPresence({ status: 'online', game: { name: game} });
   console.log('I\'m in');
   console.log(client.user.username);
