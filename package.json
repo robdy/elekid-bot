@@ -1,7 +1,7 @@
 {
   "name": "elekid",
   "version": "0.0.1",
-  "description": "Bot with multiple functionalities: high five, showing current time in different timezones",
+  "description": "(to be) Bot with multiple functionalities. Currently high five",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,6 +9,12 @@
   },
   "author": "robdy",
   "license": "MIT",
+  "homepage": "https://github.com/robdy/elekid-bot#readme",
+  "bugs": "https://github.com/robdy/elekid-bot/issues",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/robdy/elekid-bot.git"
+  },
   "dependencies": {
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0"
