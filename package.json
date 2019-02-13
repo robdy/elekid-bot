@@ -1,7 +1,7 @@
 {
   "name": "elekid",
-  "version": "0.0.1",
-  "description": "(to be) Bot with multiple functionalities. Currently high five",
+  "version": "0.0.2",
+  "description": "(to be) Bot with multiple functionalities. Currently high five and gathering Pokémon-related news",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,11 +12,13 @@
   "homepage": "https://github.com/robdy/elekid-bot#readme",
   "bugs": "https://github.com/robdy/elekid-bot/issues",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/robdy/elekid-bot.git"
+    "type": "git",
+    "url": "https://github.com/robdy/elekid-bot.git"
   },
   "dependencies": {
     "discord.js": "^11.4.2",
-    "dotenv": "^6.2.0"
+    "dotenv": "^6.2.0",
+    "twit": "^2.2.11",
+    "twitter": "^1.7.1"
   }
 }
