@@ -4,7 +4,7 @@
   "description": "(to be) Bot with multiple functionalities. Currently high five and gathering Pokémon-related news",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/eslint .",
     "start": "node index.js"
   },
   "author": "robdy",
@@ -20,5 +20,10 @@
     "dotenv": "^6.2.0",
     "moment": "^2.24.0",
     "twit": "^2.2.11"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
   }
 }
