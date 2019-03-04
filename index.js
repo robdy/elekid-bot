@@ -70,9 +70,18 @@ client.on('ready', () => {
   console.log(client.user.username);
   
   // Grab RSS posts
-  rss.grabRSS('https://pokemony.xyz/feed/')
+  (async () => {
+    try {
+        const text = await rss.grabRSS('https://poksemony.xyz/feed/');
+        for (let i = 0; i < config.updateChannels.length; i += 1) {
+          client.channels.get(config.updateChannels[i]).send(text.link);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+})();
   
-  setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
+  //setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
 });
 
 client.on('message', async (msg) => {

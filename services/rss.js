@@ -44,8 +44,7 @@ function getNewPosts (feed, lastChecked) {
 
 module.exports = {
   async grabRSS (siteUrl) {
-    pull(siteUrl)
-    .then(res => console.log(getNewPosts(res, 'Fri, 01 Mar 2019 17:43:18 +0000')))
-    .catch(err => console.log(err));
+    let feed = await pull(siteUrl)
+    return getNewPosts(feed, 'Fri, 01 Mar 2019 17:43:18 +0000');
 }
 }

@@ -20,7 +20,8 @@
     "dotenv": "^6.2.0",
     "moment": "^2.24.0",
     "request-promise": "^4.2.4",
-    "twit": "^2.2.11"
+    "twit": "^2.2.11",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "eslint": "^5.13.0",
