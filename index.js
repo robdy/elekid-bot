@@ -1,13 +1,19 @@
-const Discord = require('discord.js');
-
-const client = new Discord.Client();
-const Twitter = require('twit');
-const moment = require('moment');
+// Config file
 const config = require('./config.js');
 
-// Connecting to Twitter
+// Discord
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+// Twitter
+const Twitter = require('twit');
 const twitterClient = new Twitter(config.twitter);
 
+// RSS
+const rss = require('./services/rss.js');
+
+// Other
+const moment = require('moment');
 const isDev = (config.isDev === 'Y');
 
 if (isDev) {
@@ -62,6 +68,11 @@ client.on('ready', () => {
   });
   console.log('I\'m in');
   console.log(client.user.username);
+  
+  // Grab RSS posts
+  rss.grabRSS('https://pokemony.xyz/feed/')
+  
+  setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
 });
 
 client.on('message', async (msg) => {
