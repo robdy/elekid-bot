@@ -1,20 +1,23 @@
-// Config file
-const config = require('./config.js');
-
+// Modules
+const moment = require('moment');
 // Discord
 const Discord = require('discord.js');
-const client = new Discord.Client();
-
 // Twitter
 const Twitter = require('twit');
-const twitterClient = new Twitter(config.twitter);
-
-// RSS
+// Config file
+const config = require('./config.js');
 const rss = require('./services/rss.js');
 
 // Other
-const moment = require('moment');
 const isDev = (config.isDev === 'Y');
+
+const client = new Discord.Client();
+const twitterClient = new Twitter(config.twitter);
+
+let rssLastChecked = {};
+for (let i = 0; i < config.rssToFollow.length; i += 1) {
+  rssLastChecked[config.rssToFollow[i]] = null;
+}
 
 if (isDev) {
   config.twitterUsersToFollow.push('2899773086');
@@ -68,20 +71,25 @@ client.on('ready', () => {
   });
   console.log('I\'m in');
   console.log(client.user.username);
-  
+
   // Grab RSS posts
   (async () => {
     try {
-        const text = await rss.grabRSS('https://poksemony.xyz/feed/');
-        for (let i = 0; i < config.updateChannels.length; i += 1) {
-          client.channels.get(config.updateChannels[i]).send(text.link);
+      for (let r = 0; r < config.rssToFollow.length ; r += 1) {
+        const posts = await rss.grabRSS(config.rssToFollow[r], rssLastChecked, isDev);
+        for (let j = posts.length - 1; j >= 0; j -= 1) { // post in chronological order
+          for (let i = 0; i < config.updateChannels.length; i += 1) {
+            const newsMessageTxt = `New post by ${posts[j]['dc:creator']}: **${posts[j]['title']}**\n${posts[j].link[0].split('?')[0]}`
+            client.channels.get(config.updateChannels[i]).send(newsMessageTxt);
+          }
         }
+      }
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-})();
-  
-  //setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
+  })();
+
+  // setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
 });
 
 client.on('message', async (msg) => {
