@@ -146,4 +146,9 @@ client.on('message', async (msg) => {
   }
 });
 
+// Error handling
+client.on('error', (err) => {
+   console.error(err.message);
+});
+
 client.login(config.token);
