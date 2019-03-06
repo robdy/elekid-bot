@@ -146,6 +146,20 @@ client.on('message', async (msg) => {
   }
 });
 
+// Handle disconnections
+client.on('resumed', () => {
+  // Presence settings
+  const game = `@Elekid bot${isDev ? ' - dev' : ''}`;
+  client.user.setPresence({
+    status: 'online',
+    game: {
+      name: game,
+    },
+  });
+  console.log('I\'m in after disconnection');
+  console.log(client.user.username);
+});
+
 // Error handling
 client.on('error', (err) => {
    console.error(err.message);
