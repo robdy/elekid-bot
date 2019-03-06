@@ -14,9 +14,10 @@ const isDev = (config.isDev === 'Y');
 const client = new Discord.Client();
 const twitterClient = new Twitter(config.twitter);
 
-let rssLastChecked = {};
+let rssLastPost = {};
+const timeNow = new Date(Date.now())
 for (let i = 0; i < config.rssToFollow.length; i += 1) {
-  rssLastChecked[config.rssToFollow[i]] = null;
+  rssLastPost[config.rssToFollow[i]] = timeNow;
 }
 
 if (isDev) {
@@ -76,20 +77,22 @@ client.on('ready', () => {
   (async () => {
     try {
       for (let r = 0; r < config.rssToFollow.length ; r += 1) {
-        const posts = await rss.grabRSS(config.rssToFollow[r], rssLastChecked, isDev);
-        for (let j = posts.length - 1; j >= 0; j -= 1) { // post in chronological order
-          for (let i = 0; i < config.updateChannels.length; i += 1) {
-            const newsMessageTxt = `New post by ${posts[j]['dc:creator']}: **${posts[j]['title']}**\n${posts[j].link[0].split('?')[0]}`
-            client.channels.get(config.updateChannels[i]).send(newsMessageTxt);
+        const posts = await rss.grabRSS(config.rssToFollow[r], rssLastPost, isDev);
+        if(posts) {
+          for (let j = posts.length - 1; j >= 0; j -= 1) { // post in chronological order
+            for (let i = 0; i < config.updateChannels.length; i += 1) {
+              const newsMessageTxt = `New post by ${posts[j]['dc:creator']}: **${posts[j]['title']}**\n${posts[j].link[0].split('?')[0]}`
+              client.channels.get(config.updateChannels[i]).send(newsMessageTxt);
+            }
           }
         }
+        setInterval(rss.grabRSS, 120*1000, config.rssToFollow[r], rssLastPost, isDev);
       }
     } catch (e) {
       console.log(e);
     }
   })();
 
-  // setInterval(rss.grabRSS, 10*1000, 'https://pokemony.xyz/feed/');
 });
 
 client.on('message', async (msg) => {
