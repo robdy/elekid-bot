@@ -106,7 +106,7 @@ client.on('message', async (msg) => {
 
   // Respond to mention
   const didYouMentionMe = (message) => {
-    message.mentions.users.some(mention => mention.id === client.user.id);
+    return message.mentions.users.some(mention => mention.id === client.user.id);
   };
   if (didYouMentionMe(msg)) {
     // embed generator: https://leovoel.github.io/embed-visualizer/
