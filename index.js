@@ -147,7 +147,7 @@ client.on('message', async (msg) => {
 });
 
 // Handle disconnections
-client.on('resumed', () => {
+client.on('resume', () => {
   // Presence settings
   const game = `@Elekid bot${isDev ? ' - dev' : ''}`;
   client.user.setPresence({
