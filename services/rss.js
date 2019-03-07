@@ -32,24 +32,28 @@ async function pull(url) {
 
 function getNewPosts(feed, rssSiteLastPost, siteUrl, isDev) {  
   // Dates to be compared
-  const lastCheckedDate = new Date(rssSiteLastPost[siteUrl]);
+  const rssSiteLastPostDate = new Date(rssSiteLastPost[siteUrl]);
   const lastBuildDate = new Date(feed.lastBuildDate);
   // Update last checked date
-  rssSiteLastPost[siteUrl] = new Date(Date.now());
+  const sortedFeed = feed.item.sort((a, b) =>{
+    return new Date(b.pubDate[0]) - new Date(a.pubDate[0]);
+  });
+  rssSiteLastPost[siteUrl] = new Date(sortedFeed[0].pubDate[0]);
+  
+  //console.log(rssSiteLastPost[siteUrl]);
+  //console.log(rssSiteLastPostDate);
   // Find newly added posts
-  if (lastCheckedDate < lastBuildDate || isDev) { // null < date evaluates to true
+  //if (rssSiteLastPostDate < rssSiteLastPost[siteUrl] || isDev) { // null < date evaluates to true
     return feed.item.filter(function (el) {
-      return new Date(el.pubDate[0]) > new Date(lastCheckedDate);
-    });
-  }
-  else return null;
+      return new Date(el.pubDate[0]) > new Date(rssSiteLastPostDate);
+    //});
+  })
 }
 
 module.exports = {
   async grabRSS(siteUrl, rssLastPost, isDev) {
     const feed = await pull(siteUrl);
     const newPosts = await getNewPosts(feed, rssLastPost, siteUrl, isDev);
-    console.log(`${siteUrl} checked and ${newPosts ? newPosts.length : '0'} posts found`);
     return newPosts;
   },
 };

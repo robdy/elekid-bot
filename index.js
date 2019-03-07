@@ -74,7 +74,7 @@ client.on('ready', () => {
   console.log(client.user.username);
 
   // Grab RSS posts
-  (async () => {
+  const rssGrabAndPost = async () => {
     try {
       for (let r = 0; r < config.rssToFollow.length ; r += 1) {
         const posts = await rss.grabRSS(config.rssToFollow[r], rssLastPost, isDev);
@@ -82,17 +82,20 @@ client.on('ready', () => {
           for (let j = posts.length - 1; j >= 0; j -= 1) { // post in chronological order
             for (let i = 0; i < config.updateChannels.length; i += 1) {
               const newsMessageTxt = `New post by ${posts[j]['dc:creator']}: **${posts[j]['title']}**\n${posts[j].link[0].split('?')[0]}`
+              console.log(`${newsMessageTxt} published ${posts[j]['pubDate']}`);
               client.channels.get(config.updateChannels[i]).send(newsMessageTxt);
             }
           }
         }
-        setInterval(rss.grabRSS, 120*1000, config.rssToFollow[r], rssLastPost, isDev);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
-  })();
-
+  }
+  
+  rssGrabAndPost();
+  setInterval(rssGrabAndPost, 120*1000);
+  
 });
 
 client.on('message', async (msg) => {
