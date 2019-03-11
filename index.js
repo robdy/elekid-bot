@@ -7,6 +7,7 @@ const Twitter = require('twit');
 // Config file
 const config = require('./config.js');
 const rss = require('./services/rss.js');
+const logger = require('./services/logger.js');
 
 // Other
 const isDev = (config.isDev === 'Y');
@@ -14,8 +15,8 @@ const isDev = (config.isDev === 'Y');
 const client = new Discord.Client();
 const twitterClient = new Twitter(config.twitter);
 
-let rssLastPost = {};
-const timeNow = new Date(Date.now())
+const rssLastPost = {};
+const timeNow = new Date(Date.now());
 for (let i = 0; i < config.rssToFollow.length; i += 1) {
   rssLastPost[config.rssToFollow[i]] = timeNow;
 }
@@ -51,7 +52,7 @@ stream.on('tweet', (tweet) => {
   if (isReply(tweet) && !(isOwnRetweet(tweet))) return true;
 
   // On dev, log tweets to console
-  if (isDev) console.log(tweet);
+  if (isDev) logger.log(tweet);
 
   const twitterMessage = `${tweet.user.name} (@${tweet.user.screen_name}) ${isOwnRetweet(tweet) ? 're' : ''}tweeted this at ${moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format('YYYY-MM-DD HH:mm')}: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
   for (let i = 0; i < config.updateChannels.length; i += 1) {
@@ -70,32 +71,33 @@ client.on('ready', () => {
       name: game,
     },
   });
-  console.log('I\'m in');
-  console.log(client.user.username);
+  logger.log('I\'m in');
+  logger.log(client.user.username);
 
   // Grab RSS posts
   const rssGrabAndPost = async () => {
     try {
-      for (let r = 0; r < config.rssToFollow.length ; r += 1) {
+      for (let r = 0; r < config.rssToFollow.length; r += 1) {
+        /* eslint-disable no-await-in-loop */
         const posts = await rss.grabRSS(config.rssToFollow[r], rssLastPost, isDev);
-        if(posts) {
+        if (posts) {
           for (let j = posts.length - 1; j >= 0; j -= 1) { // post in chronological order
             for (let i = 0; i < config.updateChannels.length; i += 1) {
-              const newsMessageTxt = `New post by ${posts[j]['dc:creator']}: **${posts[j]['title']}**\n${posts[j].link[0].split('?')[0]}`
-              console.log(`${newsMessageTxt} published ${posts[j]['pubDate']}`);
+              const authorInfo = posts[j]['dc:creator'] ? ` by ${posts[j]['dc:creator']}` : '';
+              const newsMessageTxt = `New post${authorInfo}: **${posts[j].title}**\n${posts[j].link[0].split('?')[0]}`;
+              logger.log(`${newsMessageTxt} published ${posts[j].pubDate}`);
               client.channels.get(config.updateChannels[i]).send(newsMessageTxt);
             }
           }
         }
       }
     } catch (e) {
-      console.error(e);
+      logger.error(e);
     }
-  }
-  
+  };
+
   rssGrabAndPost();
-  setInterval(rssGrabAndPost, 120*1000);
-  
+  setInterval(rssGrabAndPost, 120 * 1000);
 });
 
 client.on('message', async (msg) => {
@@ -117,7 +119,7 @@ client.on('message', async (msg) => {
         const pingMsg = `${sender} o/\\o ${receiver}`;
         reply.channel.send(pingMsg);
       })
-      .catch(err => console.log(`High five from ${sender.username} timeout`));
+      .catch(err => logger.log(`High five from ${sender.username} timeout. ${err}`));
   }
 
   // Low five
@@ -135,7 +137,7 @@ client.on('message', async (msg) => {
         const pingMsg = `${sender} o\\\\/o ${receiver}`;
         reply.channel.send(pingMsg);
       })
-      .catch(err => console.log(`Low five from ${sender.username} timeout`));
+      .catch(err => logger.log(`Low five from ${sender.username} timeout. ${err}`));
   }
 
   // Respond to mention

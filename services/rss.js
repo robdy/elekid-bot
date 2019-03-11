@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const { parseString } = require('xml2js');
+const logger = require('./logger.js');
 
 // https://stackoverflow.com/a/35756636/9902555
 function convertFromXml(xml) {
@@ -30,24 +31,22 @@ async function pull(url) {
   }
 }
 
-function getNewPosts(feed, rssSiteLastPost, siteUrl, isDev) {  
+function getNewPosts(feed, rssSiteLastPost, siteUrl, isDev) {
   // Dates to be compared
   const rssSiteLastPostDate = new Date(rssSiteLastPost[siteUrl]);
-  const lastBuildDate = new Date(feed.lastBuildDate);
   // Update last checked date
-  const sortedFeed = feed.item.sort((a, b) =>{
-    return new Date(b.pubDate[0]) - new Date(a.pubDate[0]);
-  });
-  rssSiteLastPost[siteUrl] = new Date(sortedFeed[0].pubDate[0]);
-  
-  //console.log(rssSiteLastPost[siteUrl]);
-  //console.log(rssSiteLastPostDate);
+  const sortedFeed = feed.item.sort((a, b) => new Date(b.pubDate[0]) - new Date(a.pubDate[0]));
+  if (new Date(rssSiteLastPost[siteUrl]) < new Date(sortedFeed[0].pubDate[0])) {
+    /* eslint-disable no-param-reassign */
+    rssSiteLastPost[siteUrl] = new Date(sortedFeed[0].pubDate[0]);
+  }
+  const lastPost = (({ pubDate, title }) => ({ pubDate, title }))(sortedFeed[0]);
+  if (isDev) {
+    logger.log(`${lastPost.title} at ${lastPost.pubDate}`);
+    logger.log(`rssSiteLastPostDate: ${rssSiteLastPostDate}`);
+  }
   // Find newly added posts
-  //if (rssSiteLastPostDate < rssSiteLastPost[siteUrl] || isDev) { // null < date evaluates to true
-    return feed.item.filter(function (el) {
-      return new Date(el.pubDate[0]) > new Date(rssSiteLastPostDate);
-    //});
-  })
+  return feed.item.filter(el => new Date(el.pubDate[0]) > new Date(rssSiteLastPostDate));
 }
 
 module.exports = {
