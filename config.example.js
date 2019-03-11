@@ -18,6 +18,10 @@ module.exports = {
     '2839430431', // @PokemonGoApp
   ],
 
+  rssToFollow: [
+    'https://pokemony.xyz/feed/',
+  ],
+
   // Channels
   updateChannels: [
     '11111111111111111111', // Channel where all updates should go
