@@ -92,7 +92,7 @@ client.on('message', async (msg) => {
     })
       .then((msgs) => {
         const reply = msgs.first();
-        const receiver = msg.author;
+        const receiver = reply.author;
         const pingMsg = `${sender} o/\\o ${receiver}`;
         reply.channel.send(pingMsg);
       })
@@ -110,7 +110,7 @@ client.on('message', async (msg) => {
     })
       .then((msgs) => {
         const reply = msgs.first();
-        const receiver = msg.author;
+        const receiver = reply.author;
         const pingMsg = `${sender} o\\\\/o ${receiver}`;
         reply.channel.send(pingMsg);
       })
