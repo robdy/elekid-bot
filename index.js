@@ -9,6 +9,8 @@ const config = require('./config.js');
 const rss = require('./services/rss.js');
 const logger = require('./services/logger.js');
 const commands = require('./commands');
+const discordFunctions = require('./services/discord.js');
+const twitterFunctions = require('./services/twitter.js');
 
 // Other
 const isDev = (config.isDev === 'Y');
@@ -31,31 +33,14 @@ const stream = twitterClient.stream('statuses/filter', {
   follow: config.twitterUsersToFollow,
 });
 
-// https://github.com/ttezel/twit/issues/286#issuecomment-236315960
-function isReply(tweet) {
-  if (tweet.retweeted_status
-    || tweet.in_reply_to_status_id
-    || tweet.in_reply_to_status_id_str
-    || tweet.in_reply_to_user_id
-    || tweet.in_reply_to_user_id_str
-    || tweet.in_reply_to_screen_name) return true;
-  return false;
-}
-
-function isOwnRetweet(tweet) {
-  if (tweet.retweeted_status
-      && config.twitterUsersToFollow.includes(tweet.user.id_str)) return true;
-  return false;
-}
-
 stream.on('tweet', (tweet) => {
   // Exclude replies and retweet but not own ones
-  if (isReply(tweet) && !(isOwnRetweet(tweet))) return true;
+  if (twitterFunctions.shouldBeExcluded(tweet)) return true;
 
   // On dev, log tweets to console
   if (isDev) logger.log(tweet);
 
-  const twitterMessage = `${tweet.user.name} (@${tweet.user.screen_name}) ${isOwnRetweet(tweet) ? 're' : ''}tweeted this at ${moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format('YYYY-MM-DD HH:mm')}: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+  const twitterMessage = twitterFunctions.formatTweet(tweet);
   for (let i = 0; i < config.updateChannels.length; i += 1) {
     client.channels.get(config.updateChannels[i]).send(twitterMessage);
   }
@@ -64,16 +49,7 @@ stream.on('tweet', (tweet) => {
 });
 
 client.on('ready', () => {
-  // Presence settings
-  const game = `@Elekid bot${isDev ? ' - dev' : ''}`;
-  client.user.setPresence({
-    status: 'online',
-    game: {
-      name: game,
-    },
-  });
-  logger.log('I\'m in');
-  logger.log(client.user.username);
+  discordFunctions.init(client, 'ready');
 
   // Grab RSS posts
   const rssGrabAndPost = async () => {
@@ -153,21 +129,12 @@ client.on('message', async (msg) => {
 
 // Handle disconnections
 client.on('resume', () => {
-  // Presence settings
-  const game = `@Elekid bot${isDev ? ' - dev' : ''}`;
-  client.user.setPresence({
-    status: 'online',
-    game: {
-      name: game,
-    },
-  });
-  console.log('I\'m in after disconnection');
-  console.log(client.user.username);
+  discordFunctions.init(client, 'resume');
 });
 
 // Error handling
 client.on('error', (err) => {
-   console.error(err.message);
+   logger.error(err.message);
 });
 
 client.login(config.token);
