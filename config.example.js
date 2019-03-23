@@ -28,6 +28,11 @@ module.exports = {
     '22222222222222222222', // Another channel where all updates should go
   ],
 
+  // pokemontrades specific config
+  pokemontrades: {
+    nicknameChannel: ['11111111111111111111'],
+  },
+
   // Look and feel
   colors: ['16770648', '7105386'], //  Sugimori artwork of shiny Elekid ['#FFE658', '#6C6B6A']
   githubUrl: 'https://github.com/robdy/elekid-bot',

@@ -21,4 +21,4 @@ function isOwnRetweet(tweet) {
 module.exports = {
   shouldBeExcluded: tweet => (isReply(tweet) && !(isOwnRetweet(tweet))),
   formatTweet: tweet => `${tweet.user.name} (@${tweet.user.screen_name}) ${isOwnRetweet(tweet) ? 're' : ''}tweeted this at ${moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format('YYYY-MM-DD HH:mm')}: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
-}
+};

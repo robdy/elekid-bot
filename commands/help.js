@@ -1,10 +1,10 @@
 const config = require('../config.js');
 
 module.exports = {
-  message_condition: function (message, client) {
+  message_condition(message, client) {
     return message.mentions.users.some(mention => mention.id === client.user.id);
   },
-  response: function () {
+  richResponse() {
     // embed generator: https://leovoel.github.io/embed-visualizer/
     return {
       description: `You can find [my source code on GitHub](${config.githubUrl}).`,
@@ -36,5 +36,5 @@ module.exports = {
       },
       ],
     };
-  }
+  },
 };

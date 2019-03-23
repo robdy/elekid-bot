@@ -4,6 +4,10 @@ const moment = require('moment');
 const Discord = require('discord.js');
 // Twitter
 const Twitter = require('twit');
+
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+
 // Config file
 const config = require('./config.js');
 const rss = require('./services/rss.js');
@@ -28,6 +32,35 @@ if (isDev) {
   config.twitterUsersToFollow.push('2899773086');
 } // add @Every3Minutes to follow list for testing
 
+// Create a new MongoClient
+/* WIP const mongoose = require('mongoose');
+
+mongoose.connect(`${config.mongoDB.url}/${config.mongoDB.dbName}`, { useNewUrlParser: true });
+
+// Use connect method to connect to the Server
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  logger.log('Successfully connected to database');
+});
+
+const destinationSchema = new mongoose.Schema({
+  guild: String,
+  channel: String,
+});
+
+const Destination = mongoose.model('Destination', destinationSchema);
+*/
+/*
+const twitterIDs = twitterClient.post('users/lookup', {
+  screen_name: config.twitterNamesToFollow.map((element) => element.replace('https://twitter.com/','')).join(),
+})
+.then((el) => el.data.map((element) => {
+  id: element.id_str,
+  name: element.screen_name,
+}))
+.then(console.log);
+*/
 // Create a stream to follow tweets
 const stream = twitterClient.stream('statuses/filter', {
   follow: config.twitterUsersToFollow,
@@ -116,13 +149,16 @@ client.on('message', async (msg) => {
       })
       .catch(err => logger.log(`Low five from ${sender.username} timeout. ${err}`));
   }
-  
-  for (let i in commands) {
-    console.log(commands[i]);
+
+  for (const i in commands) {
     if (commands[i].message_condition(msg, client)) {
-      msg.channel.send({
-      embed: commands[i].response(),
-    });
+      if (commands[i].richResponse) {
+        msg.channel.send({
+          embed: commands[i].richResponse(msg, client),
+        });
+      } else if (commands[i].textResponse) {
+        msg.channel.send(await commands[i].textResponse(msg, client, db));
+      }
     }
   }
 });
@@ -134,7 +170,7 @@ client.on('resume', () => {
 
 // Error handling
 client.on('error', (err) => {
-   logger.error(err.message);
+  logger.error(err.message);
 });
 
 client.login(config.token);
