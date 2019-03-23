@@ -157,7 +157,7 @@ client.on('message', async (msg) => {
           embed: commands[i].richResponse(msg, client),
         });
       } else if (commands[i].textResponse) {
-        msg.channel.send(await commands[i].textResponse(msg, client, db));
+        msg.channel.send(await commands[i].textResponse(msg, client));
       }
     }
   }
