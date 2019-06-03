@@ -8,5 +8,5 @@ jobs:
          name: The First Step
          command: |
            chmod a+x ./deploy.sh
-           ./deploy.sh
+           bash ./deploy.sh
            
