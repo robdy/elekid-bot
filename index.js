@@ -123,7 +123,7 @@ client.on('message', async (msg) => {
     const filter = m => (/(?<![oO0]\/)\\[oO0]/.exec(m.content) && (isDev ? true : m.author.id !== sender.id) && !(m.author.bot));
     await msg.channel.awaitMessages(filter, {
       max: 1,
-      time: 120000,
+      time: 600000,
       errors: ['time'],
     })
       .then((msgs) => {
@@ -153,7 +153,7 @@ client.on('message', async (msg) => {
     const filter = m => (/(?<![oO0]\\)\/[oO0]/.exec(m.content) && (isDev ? true : m.author.id !== sender.id) && !(m.author.bot));
     await msg.channel.awaitMessages(filter, {
       max: 1,
-      time: 120000,
+      time: 600000,
       errors: ['time'], 
     })
       .then((msgs) => {
