@@ -32,6 +32,9 @@ if (isDev) {
   config.twitterUsersToFollow.push('2899773086');
 } // add @Every3Minutes to follow list for testing
 
+// Connecting to GIPHY
+const giphy = require('giphy-api')(config.giphy.key);
+
 // Create a new MongoClient
 /* WIP const mongoose = require('mongoose');
 
@@ -124,10 +127,22 @@ client.on('message', async (msg) => {
       errors: ['time'],
     })
       .then((msgs) => {
-        const reply = msgs.first();
-        const receiver = reply.author;
-        const pingMsg = `${sender} o/\\o ${receiver}`;
-        reply.channel.send(pingMsg);
+        giphyLink = giphy.search('high-five')
+          .then(function (res) {
+            const reply = msgs.first();
+            const receiver = reply.author;
+            const pingMsg = {
+              title: 'High five ✋',
+              description: `${sender} o/\\o ${receiver}`,
+              color: config.colors[0],
+              image: {
+                url: res.data[Math.floor(Math.random() * 25)].images.original.url
+              },
+            };
+            reply.channel.send({
+              embed: pingMsg
+            });
+          })
       })
       .catch(err => logger.log(`High five from ${sender.username} timeout. ${err}`));
   }
@@ -139,13 +154,25 @@ client.on('message', async (msg) => {
     await msg.channel.awaitMessages(filter, {
       max: 1,
       time: 120000,
-      errors: ['time'],
+      errors: ['time'], 
     })
       .then((msgs) => {
-        const reply = msgs.first();
-        const receiver = reply.author;
-        const pingMsg = `${sender} o\\\\/o ${receiver}`;
-        reply.channel.send(pingMsg);
+        giphyLink = giphy.search('low-five')
+          .then(function (res) {
+            const reply = msgs.first();
+            const receiver = reply.author;
+            const pingMsg = {
+              title: 'Low five ✋',
+              description: `${sender} o/\\o ${receiver}`,
+              color: config.colors[0],
+              image: {
+                url: res.data[Math.floor(Math.random() * 25)].images.original.url
+              },
+            };
+            reply.channel.send({
+              embed: pingMsg
+            });
+          })      
       })
       .catch(err => logger.log(`Low five from ${sender.username} timeout. ${err}`));
   }
