@@ -7,4 +7,6 @@ jobs:
      - run:
          name: The First Step
          command: |
+           chmod a+x ./deploy.sh
            ./deploy.sh
+           
