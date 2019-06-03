@@ -1,2 +1,2 @@
-#!/usr/bin/expect -f
+#!/bin/bash
 date > test.txt
