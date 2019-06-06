@@ -2,6 +2,8 @@ Add bot to your server using [this link](https://discordapp.com/oauth2/authorize
 
 # Configuration
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/robdy/elekid-bot.svg)](https://greenkeeper.io/)
+
 Create `.env` file with the following content
 
 ```
