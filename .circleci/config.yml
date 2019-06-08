@@ -2,7 +2,7 @@ version: 2.0
 jobs:
  build:
    docker:
-     - image: alpine:3.7
+     - image: circleci/node:latest
    steps:
      - run:
          name: Fix ssh Could not resolve hostname # https://stackoverflow.com/a/44046475/9902555
@@ -11,7 +11,11 @@ jobs:
      - add_ssh_keys: # add private SSH key from CircleCI account based on fingerprint.
         fingerprints:
             - "f3:c8:ba:7a:b9:89:88:e4:84:ee:b6:a0:52:4b:23:c8"
-     - run:
-         name: The First Step
-         command: ssh $MYSSHUSER@$MYSSHHOST 'date > /home/$MYSSHUSER/test.txt'
+#     - run:
+#         name: The First Step
+#         command: |
+#             apk update
+#             apk add openssh-client
+#             ssh-keyscan -H $MYSSHHOST >> ~/.ssh/known_hosts
+#             ssh $MYSSHUSER@$MYSSHHOST 'date > /home/$MYSSHUSER/test.txt'
            
