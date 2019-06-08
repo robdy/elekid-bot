@@ -21,7 +21,7 @@
     "giphy-api": "^2.0.1",
     "moment": "^2.24.0",
     "mongodb": "^3.1.13",
-    "mongoose": "^5.4.19",
+    "mongoose": "^5.5.14",
     "request-promise": "^4.2.4",
     "twit": "^2.2.11",
     "xml2js": "^0.4.19"
