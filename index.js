@@ -138,6 +138,10 @@ client.on('message', async (msg) => {
               image: {
                 url: res.data[Math.floor(Math.random() * 25)].images.original.url
               },
+              footer: {
+                icon_url: 'https://i.imgur.com/rWk9hxP.png',
+                text: 'Powered by GIPHY'
+              }
             };
             reply.channel.send({
               embed: pingMsg
@@ -168,6 +172,10 @@ client.on('message', async (msg) => {
               image: {
                 url: res.data[Math.floor(Math.random() * 25)].images.original.url
               },
+              footer: {
+                icon_url: 'https://i.imgur.com/rWk9hxP.png',
+                text: 'Powered by GIPHY'
+              }
             };
             reply.channel.send({
               embed: pingMsg
