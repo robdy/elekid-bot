@@ -1,10 +1,9 @@
 version: 2.0
 jobs:
-  build:
+  deploy:
     branches:
       only:
         - master
-        - circle-ci
     docker:
       - image: circleci/node:latest
     steps:
@@ -21,4 +20,26 @@ jobs:
           name: The First Step
           command: |
             ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
-           
+  test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: Install and test
+          command: |
+            npm install && npm test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+  test_only:
+    jobs:
+      - test

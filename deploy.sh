@@ -1,2 +1,5 @@
 #!/bin/bash
-date > test.txt
+cd /var/www/elekid-prod
+git pull
+yarn install
+pm2 reload elekid
