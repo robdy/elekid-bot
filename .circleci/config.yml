@@ -9,8 +9,8 @@ jobs:
       - image: circleci/node:latest
     steps:
       - add_ssh_keys: # add private SSH key from CircleCI account based on fingerprint.
-        fingerprints:
-          - "f3:c8:ba:7a:b9:89:88:e4:84:ee:b6:a0:52:4b:23:c8"
+          fingerprints:
+            - "f3:c8:ba:7a:b9:89:88:e4:84:ee:b6:a0:52:4b:23:c8"
       - run:
         name: Fix ssh Could not resolve hostname # https://stackoverflow.com/a/44046475/9902555
         command: |
