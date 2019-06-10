@@ -12,12 +12,12 @@ jobs:
           fingerprints:
             - "f3:c8:ba:7a:b9:89:88:e4:84:ee:b6:a0:52:4b:23:c8"
       - run:
-        name: Fix ssh Could not resolve hostname # https://stackoverflow.com/a/44046475/9902555
-        command: |
-          mkdir .ssh
-          ssh-keyscan $MYSSHHOST >> ~/.ssh/known_hosts # Add production server IP to known hosts.
+          name: Fix ssh Could not resolve hostname # https://stackoverflow.com/a/44046475/9902555
+          command: |
+            mkdir .ssh
+            ssh-keyscan $MYSSHHOST >> ~/.ssh/known_hosts # Add production server IP to known hosts.
       - run:
-        name: The First Step
-        command: |
-          ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
+          name: The First Step
+          command: |
+            ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
            
