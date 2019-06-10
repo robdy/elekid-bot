@@ -1,9 +1,6 @@
 version: 2.0
 jobs:
   deploy:
-    branches:
-      only:
-        - master
     docker:
       - image: circleci/node:latest
     steps:
