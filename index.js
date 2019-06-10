@@ -169,7 +169,7 @@ client.on('message', async (msg) => {
             const receiver = reply.author;
             const pingMsg = {
               title: 'Low five ✋',
-              description: `${sender} o/\\o ${receiver}`,
+              description: `${sender} o\\\\/o ${receiver}`,
               color: config.colors[0],
               image: {
                 url: res.data[Math.floor(Math.random() * 25)].images.original.url,
