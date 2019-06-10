@@ -18,5 +18,6 @@ jobs:
           ssh-keyscan $MYSSHHOST >> ~/.ssh/known_hosts # Add production server IP to known hosts.
       - run:
         name: The First Step
-        command: ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
+        command: |
+          ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
            
