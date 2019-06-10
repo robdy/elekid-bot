@@ -27,6 +27,7 @@ jobs:
           command: |
             cd /home/circleci/project/
             cp config.example.js config.js
+            ls
             npm install && npm test
 workflows:
   version: 2
