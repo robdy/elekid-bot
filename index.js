@@ -1,14 +1,12 @@
 // Modules
-// const moment = require('moment');
+const moment = require('moment');
 // Discord
 const Discord = require('discord.js');
 // Twitter
 const Twitter = require('twit');
-// Giphy
-const giphyImport = require('giphy-api');
 
-// const MongoClient = require('mongodb').MongoClient;
-// const assert = require('assert');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 
 // Config file
 const config = require('./config.js');
@@ -35,7 +33,7 @@ if (isDev) {
 } // add @Every3Minutes to follow list for testing
 
 // Connecting to GIPHY
-const giphy = giphyImport(config.giphy.key);
+const giphy = require('giphy-api')(config.giphy.key);
 
 // Create a new MongoClient
 /* WIP const mongoose = require('mongoose');
@@ -129,8 +127,8 @@ client.on('message', async (msg) => {
       errors: ['time'],
     })
       .then((msgs) => {
-        giphy.search('high-five')
-          .then((res) => {
+        giphyLink = giphy.search('high-five')
+          .then(function (res) {
             const reply = msgs.first();
             const receiver = reply.author;
             const pingMsg = {
@@ -138,17 +136,17 @@ client.on('message', async (msg) => {
               description: `${sender} o/\\o ${receiver}`,
               color: config.colors[0],
               image: {
-                url: res.data[Math.floor(Math.random() * 25)].images.original.url,
+                url: res.data[Math.floor(Math.random() * 25)].images.original.url
               },
               footer: {
                 icon_url: 'https://i.imgur.com/rWk9hxP.png',
-                text: 'Powered by GIPHY',
-              },
+                text: 'Powered by GIPHY'
+              }
             };
             reply.channel.send({
-              embed: pingMsg,
+              embed: pingMsg
             });
-          });
+          })
       })
       .catch(err => logger.log(`High five from ${sender.username} timeout. ${err}`));
   }
@@ -160,11 +158,11 @@ client.on('message', async (msg) => {
     await msg.channel.awaitMessages(filter, {
       max: 1,
       time: 600000,
-      errors: ['time'],
+      errors: ['time'], 
     })
       .then((msgs) => {
-        giphy.search('low-five')
-          .then((res) => {
+        giphyLink = giphy.search('low-five')
+          .then(function (res) {
             const reply = msgs.first();
             const receiver = reply.author;
             const pingMsg = {
@@ -172,22 +170,21 @@ client.on('message', async (msg) => {
               description: `${sender} o\\\\/o ${receiver}`,
               color: config.colors[0],
               image: {
-                url: res.data[Math.floor(Math.random() * 25)].images.original.url,
+                url: res.data[Math.floor(Math.random() * 25)].images.original.url
               },
               footer: {
                 icon_url: 'https://i.imgur.com/rWk9hxP.png',
-                text: 'Powered by GIPHY',
-              },
+                text: 'Powered by GIPHY'
+              }
             };
             reply.channel.send({
-              embed: pingMsg,
+              embed: pingMsg
             });
-          });
+          })      
       })
       .catch(err => logger.log(`Low five from ${sender.username} timeout. ${err}`));
   }
 
-  /* eslint-disable no-restricted-syntax */
   for (const i in commands) {
     if (commands[i].message_condition(msg, client)) {
       if (commands[i].richResponse) {
