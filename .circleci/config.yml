@@ -1,0 +1,44 @@
+version: 2.0
+jobs:
+  deploy:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - add_ssh_keys: # add private SSH key from CircleCI account based on fingerprint.
+          fingerprints:
+            - "f3:c8:ba:7a:b9:89:88:e4:84:ee:b6:a0:52:4b:23:c8"
+      - run:
+          name: Fix ssh Could not resolve hostname # https://stackoverflow.com/a/44046475/9902555
+          command: |
+            mkdir .ssh
+            ssh-keyscan $MYSSHHOST >> ~/.ssh/known_hosts # Add production server IP to known hosts.
+      - run:
+          name: The First Step
+          command: |
+            ssh $MYSSHUSER@$MYSSHHOST 'bash -s' < deploy.sh
+  test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: Install and test
+          command: |
+            cd /home/circleci/project/
+            cp config.example.js config.js
+            npm install && npm test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+  test_only:
+    jobs:
+      - test
