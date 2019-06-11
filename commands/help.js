@@ -1,7 +1,7 @@
 const config = require('../config.js');
 
 module.exports = {
-  message_condition(message, client) {
+  messageCondition(message, client) {
     return message.mentions.users.some(mention => mention.id === client.user.id);
   },
   richResponse() {

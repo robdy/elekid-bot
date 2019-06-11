@@ -1,9 +1,10 @@
+/* eslint-disable */
 const mongoose = require('mongoose');
 const config = require('../config.js');
 
 
 module.exports = {
-  message_condition(message, client) {
+  messageCondition(message, client) {
     return /redirect/.exec(message.content);
   },
   async textResponse(msg, client, db) {

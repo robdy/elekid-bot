@@ -1,7 +1,8 @@
+/* eslint-disable */
 const config = require('../config.js');
 
 module.exports = {
-  message_condition(message, client) {
+  messageCondition(message, client) {
     return ((/^nick +[a-z0-9 ]+$/i.exec(message.content)) && (config.pokemontrades.nicknameChannel.includes(message.channel.id)));
   },
   async textResponse(msg, client) {
