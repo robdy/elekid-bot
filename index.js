@@ -4,8 +4,6 @@
 const Discord = require('discord.js');
 // Twitter
 const Twitter = require('twit');
-// Giphy
-const giphyRequire = require('giphy-api');
 
 // const MongoClient = require('mongodb').MongoClient;
 // const assert = require('assert');
@@ -17,6 +15,7 @@ const logger = require('./services/logger.js');
 const commands = require('./commands');
 const discordFunctions = require('./services/discord.js');
 const twitterFunctions = require('./services/twitter.js');
+const giphyFunctions = require('./services/giphy.js');
 
 // Other
 const isDev = (config.isDev === 'Y');
@@ -34,28 +33,6 @@ if (isDev) {
   config.twitterUsersToFollow.push('2899773086');
 } // add @Every3Minutes to follow list for testing
 
-// Connecting to GIPHY
-const giphy = giphyRequire(config.giphy.key);
-
-// Create a new MongoClient
-/* WIP const mongoose = require('mongoose');
-
-mongoose.connect(`${config.mongoDB.url}/${config.mongoDB.dbName}`, { useNewUrlParser: true });
-
-// Use connect method to connect to the Server
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  logger.log('Successfully connected to database');
-});
-
-const destinationSchema = new mongoose.Schema({
-  guild: String,
-  channel: String,
-});
-
-const Destination = mongoose.model('Destination', destinationSchema);
-*/
 /*
 const twitterIDs = twitterClient.post('users/lookup', {
   screen_name: config.twitterNamesToFollow.map((element) => element.replace('https://twitter.com/','')).join(),
@@ -129,8 +106,8 @@ client.on('message', async (msg) => {
       errors: ['time'],
     })
       .then((msgs) => {
-        giphy.search('high-five')
-          .then((res) => {
+        giphyFunctions.searchGiphy('high-five')
+          .then((link) => {
             const reply = msgs.first();
             const receiver = reply.author;
             const pingMsg = {
@@ -138,7 +115,7 @@ client.on('message', async (msg) => {
               description: `${sender} o/\\o ${receiver}`,
               color: config.colors[0],
               image: {
-                url: res.data[Math.floor(Math.random() * 25)].images.original.url,
+                url: link,
               },
               footer: {
                 icon_url: 'https://i.imgur.com/rWk9hxP.png',
@@ -163,8 +140,8 @@ client.on('message', async (msg) => {
       errors: ['time'],
     })
       .then((msgs) => {
-        giphy.search('low-five')
-          .then((res) => {
+        giphyFunctions.searchGiphy('low-five')
+          .then((link) => {
             const reply = msgs.first();
             const receiver = reply.author;
             const pingMsg = {
@@ -172,7 +149,7 @@ client.on('message', async (msg) => {
               description: `${sender} o\\\\/o ${receiver}`,
               color: config.colors[0],
               image: {
-                url: res.data[Math.floor(Math.random() * 25)].images.original.url,
+                url: link,
               },
               footer: {
                 icon_url: 'https://i.imgur.com/rWk9hxP.png',
