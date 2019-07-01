@@ -33,6 +33,11 @@ module.exports = {
     nicknameChannel: ['11111111111111111111'],
   },
 
+  // Event log channel
+  eventLogChannels: [
+    '33333333333333', // Discord channel to log all important events
+  ],
+
   // Look and feel
   colors: ['16770648', '7105386'], //  Sugimori artwork of shiny Elekid ['#FFE658', '#6C6B6A']
   githubUrl: 'https://github.com/robdy/elekid-bot',
