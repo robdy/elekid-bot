@@ -12,6 +12,7 @@ module.exports = {
         name: game,
       },
     });
+    // client.channels.get(config.eventLogChannels[0]).send("Bot is on");
     logger.log(`I'm in${event === 'resume' ? ' after disconnection.' : '.'}`);
     logger.log(client.user.username);
   },

@@ -29,10 +29,6 @@ for (let i = 0; i < config.rssToFollow.length; i += 1) {
   rssLastPost[config.rssToFollow[i]] = timeNow;
 }
 
-if (isDev) {
-  config.twitterUsersToFollow.push('2899773086');
-} // add @Every3Minutes to follow list for testing
-
 /*
 const twitterIDs = twitterClient.post('users/lookup', {
   screen_name: config.twitterNamesToFollow.map((element) => element.replace('https://twitter.com/','')).join(),
@@ -56,8 +52,10 @@ stream.on('tweet', (tweet) => {
   if (isDev) logger.log(tweet);
 
   const twitterMessage = twitterFunctions.formatTweet(tweet);
-  for (let i = 0; i < config.updateChannels.length; i += 1) {
-    client.channels.get(config.updateChannels[i]).send(twitterMessage);
+  const channelsToPost = twitterFunctions.findProperDestinationChannel(tweet);
+
+  for (let i = 0; i < channelsToPost.length; i += 1) {
+    client.channels.get(channelsToPost[i]).send(twitterMessage);
   }
 
   return false;
