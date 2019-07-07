@@ -15,4 +15,5 @@ TWITTER_ACCESS_TOKEN_KEY=YOUR.TWITTER.ACCESS.TOKEN.KEY.HERE
 TWITTER_ACCESS_TOKEN_SECRET=YOUR.TWITTER.ACCESS.TOKEN.SECRET.HERE
 ```
 
-Copy `config.example.js` to `config.js` and add the IDs of channels to which you want to send updates.
+* Copy `config.example.js` to `config.js` and add the IDs of channels to which you want to send updates.
+* Copy `servers.example.js` to `servers.js` and configure each server based on the given examples (currently Twitter sources only)
