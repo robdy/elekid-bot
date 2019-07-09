@@ -2,7 +2,8 @@ const config = require('../config.js');
 
 module.exports = {
   messageCondition(message, client) {
-    return message.mentions.users.some(mention => mention.id === client.user.id);
+    const r = RegExp(`^<@${client.user.id}> *(help)?$`);
+    return r.test(message.content);
   },
   richResponse() {
     // embed generator: https://leovoel.github.io/embed-visualizer/
