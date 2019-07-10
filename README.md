@@ -1,4 +1,4 @@
-[![Greenkeeper badge](https://badges.greenkeeper.io/robdy/elekid-bot.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/robdy/elekid-bot.svg)](https://greenkeeper.io/) [![CircleCI](https://circleci.com/gh/robdy/elekid-bot/tree/master.svg?style=shield)](https://circleci.com/gh/robdy/elekid-bot/tree/master)
 
 Add bot to your server using [this link](https://discordapp.com/oauth2/authorize?client_id=512740516371234826&scope=bot&permission=2048).
 
