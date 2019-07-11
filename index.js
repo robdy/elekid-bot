@@ -83,6 +83,23 @@ client.on('message', async (msg) => {
   // Ignore bots
   if (msg.author.bot) return;
 
+  // Special command for Ragnarok Battle Royale
+  // Channel 598210289778819095 for prod and 547777562768572419 for testing
+  if ((msg.channel.id === '598210289778819095' || msg.channel.id === '547777562768572419') && RegExp(`<@${client.user.id}> *(vote) [23]`).test(msg.content)) {
+    try {
+      const lastTwoMsgs = await client.channels.get(msg.channel.id).fetchMessages({ limit: 2 });
+      const voteMsg = lastTwoMsgs.last();
+      await voteMsg.react('🇦');
+      await voteMsg.react('🇧');
+      if (msg.content.split(' ')[msg.content.split(' ').length - 1] === '3') {
+        await voteMsg.react('🇨');
+      }
+      msg.delete();
+    } catch (e) {
+      logger.error(e);
+    }
+  }
+
   /* eslint-disable no-restricted-syntax */
   for (const i in commands) {
     if (commands[i].messageCondition(msg, client)) {
