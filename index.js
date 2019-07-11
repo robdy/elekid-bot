@@ -15,7 +15,6 @@ const logger = require('./services/logger.js');
 const commands = require('./commands');
 const discordFunctions = require('./services/discord.js');
 const twitterFunctions = require('./services/twitter.js');
-const giphyFunctions = require('./services/giphy.js');
 
 // Other
 const isDev = (config.isDev === 'Y');
@@ -29,16 +28,6 @@ for (let i = 0; i < config.rssToFollow.length; i += 1) {
   rssLastPost[config.rssToFollow[i]] = timeNow;
 }
 
-/*
-const twitterIDs = twitterClient.post('users/lookup', {
-  screen_name: config.twitterNamesToFollow.map((element) => element.replace('https://twitter.com/','')).join(),
-})
-.then((el) => el.data.map((element) => {
-  id: element.id_str,
-  name: element.screen_name,
-}))
-.then(console.log);
-*/
 // Create a stream to follow tweets
 const stream = twitterClient.stream('statuses/filter', {
   follow: config.twitterUsersToFollow,
@@ -94,74 +83,6 @@ client.on('message', async (msg) => {
   // Ignore bots
   if (msg.author.bot) return;
 
-  // High five
-  if (/[oO0]\/(?!\\[oO0])/.exec(msg.content)) {
-    const sender = msg.author;
-    const filter = m => (/(?<![oO0]\/)\\[oO0]/.exec(m.content) && (isDev ? true : m.author.id !== sender.id) && !(m.author.bot));
-    await msg.channel.awaitMessages(filter, {
-      max: 1,
-      time: 600000,
-      errors: ['time'],
-    })
-      .then((msgs) => {
-        giphyFunctions.searchGiphy('high-five')
-          .then((link) => {
-            const reply = msgs.first();
-            const receiver = reply.author;
-            const pingMsg = {
-              title: 'High five ✋',
-              description: `${sender} o/\\o ${receiver}`,
-              color: config.colors[0],
-              image: {
-                url: link,
-              },
-              footer: {
-                icon_url: 'https://i.imgur.com/rWk9hxP.png',
-                text: 'Powered by GIPHY',
-              },
-            };
-            reply.channel.send({
-              embed: pingMsg,
-            });
-          });
-      })
-      .catch(err => logger.log(`High five from ${sender.username} timeout. ${err}`));
-  }
-
-  // Low five
-  if (/[oO0]\\(?!\/[oO0])/.exec(msg.content)) {
-    const sender = msg.author;
-    const filter = m => (/(?<![oO0]\\)\/[oO0]/.exec(m.content) && (isDev ? true : m.author.id !== sender.id) && !(m.author.bot));
-    await msg.channel.awaitMessages(filter, {
-      max: 1,
-      time: 600000,
-      errors: ['time'],
-    })
-      .then((msgs) => {
-        giphyFunctions.searchGiphy('low-five')
-          .then((link) => {
-            const reply = msgs.first();
-            const receiver = reply.author;
-            const pingMsg = {
-              title: 'Low five ✋',
-              description: `${sender} o\\\\/o ${receiver}`,
-              color: config.colors[0],
-              image: {
-                url: link,
-              },
-              footer: {
-                icon_url: 'https://i.imgur.com/rWk9hxP.png',
-                text: 'Powered by GIPHY',
-              },
-            };
-            reply.channel.send({
-              embed: pingMsg,
-            });
-          });
-      })
-      .catch(err => logger.log(`Low five from ${sender.username} timeout. ${err}`));
-  }
-
   // Special command for Ragnarok Battle Royale
   // Channel 598210289778819095 for prod and 547777562768572419 for testing
   if ((msg.channel.id === '598210289778819095' || msg.channel.id === '547777562768572419') && RegExp(`<@${client.user.id}> *(vote) [23]`).test(msg.content)) {
@@ -188,7 +109,10 @@ client.on('message', async (msg) => {
         });
       } else if (commands[i].textResponse) {
         msg.channel.send(await commands[i].textResponse(msg, client));
+      } else if (typeof commands[i].callback === 'function') {
+        commands[i].callback(msg, client);
       }
+      break;
     }
   }
 });

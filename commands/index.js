@@ -5,7 +5,9 @@ require('fs').readdirSync(`${__dirname}/`).forEach((file) => {
   if (file.match(/\.js$/) !== null && file !== 'index.js') {
     const name = file.replace('.js', '');
     /* eslint-disable import/no-dynamic-require */
-    const { messageCondition, richResponse, textResponse } = require(`./${file}`);
+    const {
+      messageCondition, richResponse, textResponse, callback,
+    } = require(`./${file}`);
     if (!messageCondition) {
       return;
     }
@@ -13,6 +15,7 @@ require('fs').readdirSync(`${__dirname}/`).forEach((file) => {
       messageCondition,
       richResponse,
       textResponse,
+      callback,
     };
   }
 });
