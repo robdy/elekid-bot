@@ -1,5 +1,6 @@
 const config = require('../config.js');
 const giphyFunctions = require('../services/giphy.js');
+const logger = require('../services/logger.js');
 
 let pendingFives = [];
 const isDev = (config.isDev === 'Y');
@@ -7,20 +8,20 @@ const isDev = (config.isDev === 'Y');
 
 const fives = {
   'high-five': {
-    left: /[oO0]\/(?!\\[oO0])/,
-    right: /(?<![oO0]\/)\\[oO0]/,
+    left: /(\s|^)[oO0]\/(?!\\[oO0])(\s|$)/,
+    right: /(\s|^)(?<![oO0]\/)\\[oO0](\s|$)/,
     title: 'High five ✋',
     marking: 'o/\\o',
   },
   'low-five': {
-    left: /[oO0]{\\}(?!\/[oO0])/,
-    right: /(?<![oO0]\\)\/[oO0]/,
+    left: /(\s|^)[oO0]{\\}(?!\/[oO0])(\s|$)/,
+    right: /(\s|^)(?<![oO0]\\)\/[oO0](\s|$)/,
     title: 'Low five ✋',
     marking: 'o\\\\/o',
   },
   hug: {
-    left: /[oO0][{[(](?![)\]}][oO0])/,
-    right: /(?<![oO0][{[(])[)\]}][oO0]/,
+    left: /(\s|^)[oO0][{[(](?![)\]}][oO0])(\s|$)/,
+    right: /(\s|^)(?<![oO0][{[(])[)\]}][oO0](\s|$)/,
     title: 'Hug 🤗',
     marking: 'o{}o',
   },
@@ -61,6 +62,7 @@ module.exports = {
   },
   callback: async (message, client) => {
     const whichFive = isFive(message);
+    logger.log(`${message.content} matched as ${whichFive.name}:${whichFive.side}`);
     const matchingFives = pendingFives.filter(el => el.channel === whichFive.channel
          && el.name === whichFive.name
          && el.side !== whichFive.side
@@ -88,6 +90,8 @@ module.exports = {
             && el.side === matchingFives[i].side
             && el.author === matchingFives[i].author
             && el.createdAt === matchingFives[i].createdAt));
+        logger.log(`Current stack for #${message.channel.name}:`);
+        logger.log(pendingFives.filter(el => el.channel === whichFive.channel));
       }
     } else {
       // If no matching five is pending
