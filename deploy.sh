@@ -2,5 +2,5 @@
 # To be added later
 # cd /var/www/elekid-prod
 # git pull
-# yarn install
+# npm install
 # pm2 reload elekid
