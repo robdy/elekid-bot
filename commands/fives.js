@@ -14,7 +14,7 @@ const fives = {
     marking: 'o/\\o',
   },
   'low-five': {
-    left: /(\s|^)[oO0]{\\}(?!\/[oO0])(\s|$)/,
+    left: /(\s|^)[oO0]\\(?!\/[oO0])(\s|$)/,
     right: /(\s|^)(?<![oO0]\\)\/[oO0](\s|$)/,
     title: 'Low five ✋',
     marking: 'o\\\\/o',
