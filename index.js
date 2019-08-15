@@ -33,7 +33,7 @@ const stream = twitterClient.stream('statuses/filter', {
   follow: config.twitterUsersToFollow,
 });
 
-stream.on('tweet', (tweet) => {
+stream.on('tweet', tweet => {
   // Exclude replies and retweet but not own ones
   if (twitterFunctions.shouldBeExcluded(tweet)) return true;
 
@@ -79,7 +79,7 @@ client.on('ready', () => {
   setInterval(rssGrabAndPost, 120 * 1000);
 });
 
-client.on('message', async (msg) => {
+client.on('message', async msg => {
   // Ignore bots
   if (msg.author.bot) return;
 
@@ -123,7 +123,7 @@ client.on('resume', () => {
 });
 
 // Error handling
-client.on('error', (err) => {
+client.on('error', err => {
   logger.error(err.message);
 });
 

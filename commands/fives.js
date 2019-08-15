@@ -27,7 +27,7 @@ const fives = {
   },
 };
 
-const isFive = (message) => {
+const isFive = message => {
   const txt = message.content;
   const channel = message.channel.id;
   const author = message.author.id;

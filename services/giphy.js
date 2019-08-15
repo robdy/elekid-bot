@@ -7,7 +7,7 @@ const giphy = giphyRequire(config.giphy.key);
 
 const giphyCache = [];
 
-const findAllGiphUrls = async (keyword) => {
+const findAllGiphUrls = async keyword => {
   if (giphyCache[keyword]) {
     return giphyCache[keyword];
   }

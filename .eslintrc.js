@@ -1,6 +1,7 @@
 module.exports = {
   "extends": "airbnb-base",
   "rules": {
-    "global-require": "off"
+    "global-require": "off",
+    "arrow-parens": ["error", "as-needed"]
   },
 };
